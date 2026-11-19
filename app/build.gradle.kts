@@ -11,7 +11,7 @@ android {
         minSdk = 26
         targetSdk = 36
         versionCode = 1
-        versionName = "0.1.1"
+        versionName = "0.1.2"
 
         buildConfigField("String", "CHROMIUM_BASELINE", "\"158.0.8127.36\"")
     }
