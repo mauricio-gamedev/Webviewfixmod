@@ -95,16 +95,16 @@ mkdir -p "$OUT_DIR"
 ARGS_FILE="$OUT_DIR/args.gn"
 install -m 600 "$TEMPLATE" "$ARGS_FILE"
 {
-  printf '\n# Selected upstream release channel; resolved from project.json.\\n'
-  printf 'android_channel = %s\\n' "$(gn_string "$CHROMIUM_CHANNEL")"
+  printf '\n# Selected upstream release channel; resolved from project.json.\n'
+  printf 'android_channel = %s\n' "$(gn_string "$CHROMIUM_CHANNEL")"
 } >> "$ARGS_FILE"
 
 if [[ "$BUILD_FLAVOR" == "aosp-custom" ]]; then
   {
-    printf '\n# Injected from environment; never commit this generated file.\\n'
-    printf 'default_android_keystore_path = "//a06-webcore-release.keystore"\\n'
-    printf 'default_android_keystore_name = %s\\n' "$(gn_string "$A06_WEBVIEW_KEY_ALIAS")"
-    printf 'default_android_keystore_password = %s\\n' "$(gn_string "$A06_WEBVIEW_KEY_PASSWORD")"
+    printf '\n# Injected from environment; never commit this generated file.\n'
+    printf 'default_android_keystore_path = "//a06-webcore-release.keystore"\n'
+    printf 'default_android_keystore_name = %s\n' "$(gn_string "$A06_WEBVIEW_KEY_ALIAS")"
+    printf 'default_android_keystore_password = %s\n' "$(gn_string "$A06_WEBVIEW_KEY_PASSWORD")"
   } >> "$ARGS_FILE"
 fi
 chmod 600 "$ARGS_FILE"
