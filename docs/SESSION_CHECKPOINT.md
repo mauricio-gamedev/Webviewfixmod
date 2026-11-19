@@ -1,10 +1,11 @@
 # Session checkpoint
 
 ## Verified repository state
-- Repository: `ma Mauricio-gamedev/Webviewfixmod`.
+- Repository: `mauricio-gamedev/Webviewfixmod`.
 - Project: Chromium-based Android WebView provider; explicitly not a browser.
 - Target: Samsung Galaxy A06 SM-A065M, Android 16, ARM64, no root.
 - Bootstrap merged into `main` through PR #1.
+- Verified checkpoint update merged through PR #2.
 - Merge commit: `3aa7c894c367dc405902b0234c5d7dd57855fc7a`.
 - GitHub Actions run `44586652070` completed successfully.
 - CI validated required project metadata, unit tests and shell syntax for the device-baseline and WebView build scripts.
