@@ -5,27 +5,28 @@
 - [x] ARM64 target and device profile.
 - [x] Provider integration constraints and scaffold CI.
 
-## M1 — Reproducible upstream baseline
-- [x] Select Android System WebView Stable 158.0.8127.36.
-- [x] Resolve and record the full Chromium commit.
-- [x] Add pinned source synchronization script.
-- [x] Separate local-test and custom-AOSP release build flavors.
-- [ ] Execute a clean ARM64 Chromium checkout and build on capable Linux infrastructure.
-- [ ] Preserve build logs, toolchain versions and APK SHA-256.
+## M1 — Chromium source and provider build
+- [x] Pin exact Stable, Beta, Dev and Canary WebView source revisions.
+- [x] Select Canary M160 as the active experimental development line.
+- [x] Add channel-aware source synchronization with exact SHA verification.
+- [x] Add channel-aware GN configuration for both build flavors.
+- [x] Preserve local-test and custom-AOSP provider package identities.
+- [ ] Execute a clean ARM64 Chromium checkout on capable Linux infrastructure.
+- [ ] Build the untouched `system_webview_apk` and preserve APK SHA-256/logs.
+- [ ] Validate provider startup on a compatible AOSP userdebug/eng image.
 
-## M2 — Device-side baseline and provider validation
-- [x] Implement offline A06 WebView Diagnostics app.
-- [x] Add provider, device, RAM/PSS, Web API, graphics and media capability reporting.
+## M2 — Device-side performance evidence
+- [x] Implement optional offline A06 WebView Diagnostics app.
 - [x] Add Android build, lint and artifact workflow.
 - [x] Build and publish the diagnostics debug APK (GitHub Actions run 44591340334).
-- [ ] Install diagnostics APK on Galaxy A06 and capture stock provider baseline.
-- [ ] Repeat baseline three times and store JSON reports.
-- [ ] Validate provider selection and host-app compatibility on AOSP userdebug/eng.
+- [ ] Capture repeated device measurements for later comparison with Chromium builds.
+- Note: device diagnostics are not a prerequisite for source sync or building the custom provider.
 
-## M3 — Optimization
-- [ ] Profile actual bottlenecks using the device-side baseline.
+## M3 — A06 Chromium optimization
+- [ ] Profile startup, renderer memory, scrolling and graphics on realistic WebView hosts.
 - [ ] Introduce one isolated Chromium patch at a time.
-- [ ] Require benchmarks, compatibility tests, stability checks and rollback notes.
+- [ ] Require benchmark deltas, compatibility tests, stability checks and rollback notes.
+- [ ] Re-test each patch when moving between Stable/Beta/Dev/Canary pins.
 
 ## M4 — AOSP integration
 - [ ] Prepare provider allowlist and release certificate for a controlled AOSP image.

@@ -7,6 +7,7 @@ from pathlib import Path
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
+CHANNELS = {"stable", "beta", "dev", "canary"}
 REQUIRED = [
     "README.md", "AGENTS.md", "project.json",
     "chromium/args/a06-arm64.gn",
@@ -44,18 +45,39 @@ def main() -> int:
         "not_a_browser": True,
         "target_os": "android",
         "target_cpu": "arm64",
-        "chromium_version": "158.0.8127.36",
-        "chromium_release_channel": "stable",
-        "production_provider_package": "io.github.astromg01.a06webcore",
         "provider_test_package": "com.android.webview",
+        "production_provider_package": "io.github.astromg01.a06webcore",
     }
     for key, value in expected.items():
         if data.get(key) != value:
             errors.append(f"project.json: expected {key}={value!r}")
 
-    revision = data.get("chromium_revision", "")
-    if not re.fullmatch(r"[0-9a-f]{40}", revision):
-        errors.append("project.json: chromium_revision must be a full 40-character SHA")
+    channel_pins = data.get("chromium_channels", {})
+    if set(channel_pins) != CHANNELS:
+        errors.append(f"project.json: chromium_channels must define exactly {sorted(CHANNELS)}")
+    for channel in sorted(CHANNELS):
+        pin = channel_pins.get(channel, {})
+        for field in ("version", "tag", "revision", "branch_position"):
+            if not pin.get(field):
+                errors.append(f"project.json: missing chromium_channels.{channel}.{field}")
+        revision = pin.get("revision", "")
+        if not re.fullmatch(r"[0-9a-f]{40}", revision):
+            errors.append(f"project.json: chromium_channels.{channel}.revision must be a full 40-character SHA")
+
+    active_channel = data.get("chromium_release_channel")
+    if active_channel not in CHANNELS:
+        errors.append("project.json: chromium_release_channel must be stable, beta, dev, or canary")
+    else:
+        active = channel_pins.get(active_channel, {})
+        aliases = {
+            "chromium_version": "version",
+            "chromium_tag": "tag",
+            "chromium_revision": "revision",
+            "chromium_branch_position": "branch_position",
+        }
+        for project_key, pin_key in aliases.items():
+            if data.get(project_key) != active.get(pin_key):
+                errors.append(f"project.json: {project_key} must match the active {active_channel} pin")
 
     device = data.get("device", {})
     if device.get("model") != "SM-A065M" or device.get("android_version") != 16:
@@ -66,8 +88,17 @@ def main() -> int:
         errors.append("README must explicitly state that this is not a browser")
 
     upstream = (ROOT / "chromium/UPSTREAM.md").read_text(encoding="utf-8") if (ROOT / "chromium/UPSTREAM.md").exists() else ""
-    if revision and revision not in upstream:
-        errors.append("chromium/UPSTREAM.md must contain the exact pinned revision")
+    for pin in channel_pins.values():
+        revision = pin.get("revision")
+        if revision and revision not in upstream:
+            errors.append(f"chromium/UPSTREAM.md must contain pinned revision {revision}")
+
+    for tool in ("tools/sync_chromium.sh", "tools/build_webview.sh"):
+        path = ROOT / tool
+        if path.exists():
+            content = path.read_text(encoding="utf-8")
+            if "CHROMIUM_CHANNEL" not in content or "chromium_channels" not in content:
+                errors.append(f"{tool} must resolve the selected release channel from project.json")
 
     diagnostic = data.get("diagnostic_app", {})
     diagnostic_expected = {
@@ -87,10 +118,12 @@ def main() -> int:
         print("A06 WebCore scaffold validation: FAILED")
         print("\n".join(f"- {e}" for e in errors))
         return 1
+    active = data["chromium_release_channel"]
     print(f"A06 WebCore scaffold validation: PASSED ({len(REQUIRED)} required files checked)")
-    print("Pinned Chromium revision metadata is consistent.")
+    print(f"Active Chromium pin: {active} {data['chromium_version']} ({data['chromium_revision']})")
+    print("Stable, Beta, Dev and Canary pins are all present and internally consistent.")
     print("This does not sync/compile Chromium or validate runtime provider selection.")
-    print("The diagnostics app source is checked, but APK availability depends on its separate Android build workflow.")
+    print("The diagnostics app is an optional validation tool, not the WebView provider.")
     return 0
 
 if __name__ == "__main__":
