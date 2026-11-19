@@ -5,22 +5,29 @@
 - Project: Chromium-based Android WebView provider; explicitly not a browser.
 - Target: Samsung Galaxy A06 SM-A065M, Android 16, ARM64, no root.
 - Bootstrap merged into `main` through PR #1.
-- Verified checkpoint update merged through PR #2.
-- Merge commit: `3aa7c894c367dc405902b0234c5d7dd57855fc7a`.
-- GitHub Actions run `44586652070` completed successfully.
-- CI validated required project metadata, unit tests and shell syntax for the device-baseline and WebView build scripts.
+- Session checkpoint update merged through PR #2.
+- Repository-name correction merged through PR #3.
+- Scaffold CI passed after the original bootstrap and checkpoint correction.
+
+## M1 source pin
+- Selected Android System WebView Stable 158.0.8127.36.
+- Chromium tag: `158.0.8127.36`.
+- Exact commit: `14d6f648e8cd7ad750a4044200ce94d3321be260`.
+- Branch position: `refs/branch-heads/8127@{#1691}`.
+- Added pinned source synchronization and separate local-test / custom-AOSP build flavors.
 
 ## Not yet verified
-- No Chromium source checkout or pinned revision.
-- No Chromium APK compiled.
-- No APK installed or selected as WebView provider.
-- No performance patch or benchmark result.
-- No firmware integration or modification.
-- CI does not compile Chromium or validate provider selection.
+- Chromium source has not been synced in a build environment.
+- No Chromium APK has been compiled.
+- No APK has been installed or selected as WebView provider.
+- No performance patch or benchmark result exists.
+- No firmware integration or modification exists.
+- GitHub Actions validates the scaffold only; it does not compile Chromium.
 
 ## Next steps
-1. Select a stable Chromium revision and verify Android API 36 build compatibility.
-2. Record the exact Chromium commit SHA and build-tool versions.
-3. Build the unmodified ARM64 `system_webview_apk` target on capable Linux infrastructure.
-4. Validate provider selection on an AOSP userdebug/eng image.
-5. Collect stock WebView and performance baselines before proposing optimization patches.
+1. Run scaffold CI on the M1 branch.
+2. Sync the pinned Chromium revision with depot_tools on capable Linux infrastructure.
+3. Build the untouched ARM64 `system_webview_apk` target.
+4. Preserve build logs, toolchain metadata and APK SHA-256.
+5. Validate provider selection and WebView Shell on AOSP userdebug/eng.
+6. Collect stock WebView and performance baselines before proposing optimization patches.

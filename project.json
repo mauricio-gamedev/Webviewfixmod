@@ -4,7 +4,11 @@
   "project_type": "android-webview-provider",
   "not_a_browser": true,
   "upstream": "https://chromium.googlesource.com/chromium/src.git",
-  "chromium_revision": "UNPINNED_PENDING_FIRST_CLEAN_BUILD",
+  "chromium_version": "158.0.8127.36",
+  "chromium_release_channel": "stable",
+  "chromium_tag": "158.0.8127.36",
+  "chromium_revision": "14d6f648e8cd7ad750a4044200ce94d3321be260",
+  "chromium_branch_position": "refs/branch-heads/8127@{#1691}",
   "android_target": 36,
   "target_os": "android",
   "target_cpu": "arm64",
@@ -20,5 +24,6 @@
   "provider_test_package": "com.android.webview",
   "production_provider_package": "io.github.astromg01.a06webcore",
   "provider_test_environment": "AOSP userdebug/eng emulator or compatible test image",
+  "initial_build_target": "system_webview_apk",
   "ci_scope": "scaffold-validation-only"
 }
