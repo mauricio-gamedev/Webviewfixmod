@@ -1,11 +1,13 @@
 # Session checkpoint
 
-## Verified
-- GitHub repository: mauricio-gamedev/Webviewfixmod.
-- Project identity: Chromium-based Android WebView provider, not a browser.
+## Verified repository state
+- Repository: `ma Mauricio-gamedev/Webviewfixmod`.
+- Project: Chromium-based Android WebView provider; explicitly not a browser.
 - Target: Samsung Galaxy A06 SM-A065M, Android 16, ARM64, no root.
-- Repository initialization commit exists on main.
-- Bootstrap work is being prepared on feature/bootstrap-a06-webcore.
+- Bootstrap merged into `main` through PR #1.
+- Merge commit: `3aa7c894c367dc405902b0234c5d7dd57855fc7a`.
+- GitHub Actions run `44586652070` completed successfully.
+- CI validated required project metadata, unit tests and shell syntax for the device-baseline and WebView build scripts.
 
 ## Not yet verified
 - No Chromium source checkout or pinned revision.
@@ -13,10 +15,11 @@
 - No APK installed or selected as WebView provider.
 - No performance patch or benchmark result.
 - No firmware integration or modification.
+- CI does not compile Chromium or validate provider selection.
 
 ## Next steps
-1. Finish and validate the starter files on the feature branch.
-2. Pin a Chromium revision after confirming Android API 36 build compatibility.
-3. Run an unmodified ARM64 Chromium WebView build on capable Linux infrastructure.
-4. Validate provider selection on AOSP userdebug/eng.
-5. Collect A06 stock-provider and performance baselines before optimization.
+1. Select a stable Chromium revision and verify Android API 36 build compatibility.
+2. Record the exact Chromium commit SHA and build-tool versions.
+3. Build the unmodified ARM64 `system_webview_apk` target on capable Linux infrastructure.
+4. Validate provider selection on an AOSP userdebug/eng image.
+5. Collect stock WebView and performance baselines before proposing optimization patches.
