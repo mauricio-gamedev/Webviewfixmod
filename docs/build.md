@@ -52,7 +52,7 @@ Uses package `com.android.webview` and development signing. This flavor is for a
 A06_WEBVIEW_KEYSTORE_PATH=/secure/path/webview-release.keystore \
 A06_WEBVIEW_KEY_ALIAS=webview-release \
 A06_WEBVIEW_KEY_PASSWORD='***' \
-BUILD_FLAVOR=aosp-custom tools/build_webview.sh
+BUILD_FLAVOR=aosp-custom bash tools/build_webview.sh
 ```
 
 This flavor sets an official, stable-channel build and signs with a project-controlled keystore. The private keystore must never enter Git or CI logs. The resulting package is `io.github.astromg01.a06webcore`. It still requires integration into an AOSP-derived system image with a matching framework provider configuration and certificate.
