@@ -15,9 +15,11 @@ PY
 
 if [[ ! -d "$CHROMIUM_SRC" || ! -f "$CHROMIUM_SRC/BUILD.gn" ]]; then
   echo "ERROR: Chromium source checkout not found: $CHROMIUM_SRC" >&2
-  echo "Run tools/sync_chromium.sh on a prepared Linux build host." >&2
+  echo "Run bash tools/sync_chromium.sh on a prepared Linux build host." >&2
   exit 2
 fi
+
+bash "$ROOT/tools/check_build_host.sh" "$CHROMIUM_SRC"
 
 command -v gn >/dev/null 2>&1 || { echo "ERROR: gn not found in PATH" >&2; exit 2; }
 command -v autoninja >/dev/null 2>&1 || { echo "ERROR: autoninja not found in PATH" >&2; exit 2; }

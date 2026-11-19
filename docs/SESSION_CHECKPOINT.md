@@ -15,6 +15,8 @@
 - Exact commit: `14d6f648e8cd7ad750a4044200ce94d3321be260`.
 - Branch position: `refs/branch-heads/8127@{#1691}`.
 - Added pinned source synchronization and separate local-test / custom-AOSP build flavors.
+- M1 integration merged through PR #4; GN-template consistency fix merged through PR #5.
+- Added host-capacity preflight branch; pending validation and merge.
 
 ## Not yet verified
 - Chromium source has not been synced in a build environment.

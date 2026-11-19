@@ -18,7 +18,7 @@ REQUIRED = [
     "docs/build.md", "docs/device-profile.md",
     "docs/benchmark-matrix.md", "docs/ROADMAP.md",
     "docs/SESSION_CHECKPOINT.md",
-    "tools/sync_chromium.sh", "tools/build_webview.sh",
+    "tools/sync_chromium.sh", "tools/build_webview.sh", "tools/check_build_host.sh",
     "tests/test_project_metadata.py", "tests/test_build_contract.py",
 ]
 

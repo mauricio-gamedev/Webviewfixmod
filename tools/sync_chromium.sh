@@ -26,6 +26,7 @@ command -v gclient >/dev/null 2>&1 || {
 }
 
 mkdir -p "$WORKSPACE"
+bash "$ROOT/tools/check_build_host.sh" "$WORKSPACE"
 if [[ ! -f "$CHROMIUM_SRC/BUILD.gn" ]]; then
   if [[ -e "$CHROMIUM_SRC" ]]; then
     echo "ERROR: $CHROMIUM_SRC exists but is not a Chromium checkout." >&2

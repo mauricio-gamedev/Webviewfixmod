@@ -12,9 +12,11 @@ class BuildContractTests(unittest.TestCase):
         self.assertIn("a06-arm64.gn", script)
         self.assertIn("a06-arm64-aosp-custom.gn", script)
         self.assertIn("default_android_keystore_password", script)
+        self.assertIn("check_build_host.sh", script)
 
     def test_sync_script_uses_pinned_revision(self):
         script = (ROOT / "tools/sync_chromium.sh").read_text(encoding="utf-8")
+        self.assertIn("check_build_host.sh", script)
         self.assertIn("gclient sync", script)
         self.assertIn("EXPECTED_REVISION", script)
         self.assertIn('--revision="src@$EXPECTED_REVISION"', script)
