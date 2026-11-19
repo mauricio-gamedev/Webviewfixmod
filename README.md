@@ -25,14 +25,14 @@ A revisão está fixada para tornar os builds reproduzíveis. Ainda não existe 
 
 Leia `AGENTS.md`, `docs/SESSION_CHECKPOINT.md`, `docs/architecture.md`, `docs/provider-integration.md` e `docs/build.md`.
 
-Em um host Linux x86_64 preparado para builds Chromium:
+Em um host Linux x86_64 que cumpra os requisitos oficiais (8 GB RAM mínimo, 100 GB livres; mais de 16 GB RAM recomendado):
 
 ```bash
-tools/sync_chromium.sh
-BUILD_FLAVOR=local-test tools/build_webview.sh
+bash tools/sync_chromium.sh
+BUILD_FLAVOR=local-test bash tools/build_webview.sh
 ```
 
-A compilação Chromium exige um ambiente Linux x86_64 com bastante RAM e armazenamento. O Galaxy A06 é alvo de teste, não host de compilação.
+O script verifica os recursos antes de baixar ou compilar. O Galaxy A06 é alvo de teste, não host de compilação. O runner padrão do GitHub Actions tem apenas 14 GB de SSD para repositórios públicos e não comporta o build completo.
 
 ## Princípios
 
