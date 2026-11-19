@@ -4,17 +4,19 @@
 - [x] Project identity and engineering rules.
 - [x] ARM64 target and device profile.
 - [x] Provider integration constraints and scaffold CI.
-- [ ] Confirm all starter files and CI on the remote branch.
 
-## M1 — Clean upstream build
-- [ ] Select and pin a Chromium revision compatible with Android API 36.
-- [ ] Build `system_webview_apk` for ARM64 without patches.
-- [ ] Preserve build logs, APK hash and exact GN args.
+## M1 — Reproducible upstream baseline
+- [x] Select the current stable Android System WebView source tag 158.0.8127.36.
+- [x] Resolve and record the full 40-character Chromium commit.
+- [x] Add pinned source synchronization script.
+- [x] Separate local-test and custom-AOSP release build flavors.
+- [ ] Execute a clean ARM64 Chromium checkout and build on capable Linux infrastructure.
+- [ ] Preserve build logs, toolchain versions and APK SHA-256.
 
 ## M2 — Provider validation
 - [ ] Install on AOSP userdebug/eng emulator.
 - [ ] Select provider and confirm framework reports it as current.
-- [ ] Run WebView host test app and compatibility smoke tests.
+- [ ] Run WebView Shell and host-app compatibility smoke tests.
 
 ## M3 — Device baseline
 - [ ] Capture stock Samsung WebView version and firmware metadata.
@@ -28,4 +30,4 @@
 
 ## M5 — AOSP integration
 - [ ] Prepare provider allowlist and release certificate for a controlled AOSP image.
-- [ ] Validate installation, updates and fallback behavior.
+- [ ] Validate installation, updates and rollback behavior.
