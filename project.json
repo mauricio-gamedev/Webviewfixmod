@@ -4,11 +4,37 @@
   "project_type": "android-webview-provider",
   "not_a_browser": true,
   "upstream": "https://chromium.googlesource.com/chromium/src.git",
-  "chromium_version": "158.0.8127.36",
-  "chromium_release_channel": "stable",
-  "chromium_tag": "158.0.8127.36",
-  "chromium_revision": "14d6f648e8cd7ad750a4044200ce94d3321be260",
-  "chromium_branch_position": "refs/branch-heads/8127@{#1691}",
+  "chromium_version": "160.0.8171.0",
+  "chromium_release_channel": "canary",
+  "chromium_tag": "160.0.8171.0",
+  "chromium_revision": "96c4a2734b92dc38701c139d3e5a720c44528e91",
+  "chromium_branch_position": "refs/branch-heads/8171@{#1}",
+  "chromium_channels": {
+    "stable": {
+      "version": "158.0.8127.36",
+      "tag": "158.0.8127.36",
+      "revision": "14d6f648e8cd7ad750a4044200ce94d3321be260",
+      "branch_position": "refs/branch-heads/8127@{#1691}"
+    },
+    "beta": {
+      "version": "159.0.8154.4",
+      "tag": "159.0.8154.4",
+      "revision": "477da85e3d730af58ab676ea7aa02dab256eeb34",
+      "branch_position": "refs/branch-heads/8154@{#11}"
+    },
+    "dev": {
+      "version": "160.0.8157.3",
+      "tag": "160.0.8157.3",
+      "revision": "dd97a920c7852ad9708d9d4b5e784efbc9c6f83e",
+      "branch_position": "refs/branch-heads/8157@{#6}"
+    },
+    "canary": {
+      "version": "160.0.8171.0",
+      "tag": "160.0.8171.0",
+      "revision": "96c4a2734b92dc38701c139d3e5a720c44528e91",
+      "branch_position": "refs/branch-heads/8171@{#1}"
+    }
+  },
   "android_target": 36,
   "target_os": "android",
   "target_cpu": "arm64",
