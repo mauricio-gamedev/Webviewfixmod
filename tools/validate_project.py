@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
-"""Validate repository scaffold without Chromium build dependencies."""
+"""Validate repository metadata and source-build scaffolding without building Chromium."""
 from __future__ import annotations
 import json
+import re
 from pathlib import Path
 import sys
 
@@ -10,13 +11,15 @@ REQUIRED = [
     "README.md", "AGENTS.md", "project.json",
     "chromium/args/a06-arm64.gn",
     "chromium/args/a06-arm64-aosp-custom.gn",
+    "chromium/UPSTREAM.md", "chromium/PATCH_POLICY.md",
     "platform/aosp/config_webview_packages.xml.template",
     "platform/aosp/README.md",
-    "chromium/UPSTREAM.md", "chromium/PATCH_POLICY.md",
     "docs/architecture.md", "docs/provider-integration.md",
     "docs/build.md", "docs/device-profile.md",
     "docs/benchmark-matrix.md", "docs/ROADMAP.md",
     "docs/SESSION_CHECKPOINT.md",
+    "tools/sync_chromium.sh", "tools/build_webview.sh",
+    "tests/test_project_metadata.py", "tests/test_build_contract.py",
 ]
 
 def main() -> int:
@@ -33,11 +36,18 @@ def main() -> int:
         "not_a_browser": True,
         "target_os": "android",
         "target_cpu": "arm64",
+        "chromium_version": "158.0.8127.36",
+        "chromium_release_channel": "stable",
         "production_provider_package": "io.github.astromg01.a06webcore",
+        "provider_test_package": "com.android.webview",
     }
     for key, value in expected.items():
         if data.get(key) != value:
             errors.append(f"project.json: expected {key}={value!r}")
+
+    revision = data.get("chromium_revision", "")
+    if not re.fullmatch(r"[0-9a-f]{40}", revision):
+        errors.append("project.json: chromium_revision must be a full 40-character SHA")
 
     device = data.get("device", {})
     if device.get("model") != "SM-A065M" or device.get("android_version") != 16:
@@ -47,12 +57,17 @@ def main() -> int:
     if "não é um navegador" not in readme.lower():
         errors.append("README must explicitly state that this is not a browser")
 
+    upstream = (ROOT / "chromium/UPSTREAM.md").read_text(encoding="utf-8") if (ROOT / "chromium/UPSTREAM.md").exists() else ""
+    if revision and revision not in upstream:
+        errors.append("chromium/UPSTREAM.md must contain the exact pinned revision")
+
     if errors:
         print("A06 WebCore scaffold validation: FAILED")
         print("\n".join(f"- {e}" for e in errors))
         return 1
     print(f"A06 WebCore scaffold validation: PASSED ({len(REQUIRED)} required files checked)")
-    print("This does not compile Chromium or validate runtime provider selection.")
+    print("Pinned Chromium revision metadata is consistent.")
+    print("This does not sync/compile Chromium or validate runtime provider selection.")
     return 0
 
 if __name__ == "__main__":
