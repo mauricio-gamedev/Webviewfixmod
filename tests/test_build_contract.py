@@ -9,7 +9,9 @@ class BuildContractTests(unittest.TestCase):
         self.assertIn("system_webview_apk", script)
         self.assertIn("rev-parse HEAD", script)
         self.assertIn("A06_WEBVIEW_KEYSTORE_PATH", script)
-        self.assertIn("is_official_build = $OFFICIAL_BUILD", script)
+        self.assertIn("a06-arm64.gn", script)
+        self.assertIn("a06-arm64-aosp-custom.gn", script)
+        self.assertIn("default_android_keystore_password", script)
 
     def test_sync_script_uses_pinned_revision(self):
         script = (ROOT / "tools/sync_chromium.sh").read_text(encoding="utf-8")
