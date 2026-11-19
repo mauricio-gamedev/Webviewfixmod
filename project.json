@@ -25,5 +25,14 @@
   "production_provider_package": "io.github.astromg01.a06webcore",
   "provider_test_environment": "AOSP userdebug/eng emulator or compatible test image",
   "initial_build_target": "system_webview_apk",
-  "ci_scope": "scaffold-validation-only"
+  "diagnostic_app": {
+    "application_id": "io.github.astromg01.a06webcore.bench",
+    "min_sdk": 26,
+    "target_sdk": 36,
+    "android_gradle_plugin": "9.4.1",
+    "gradle": "9.6.0",
+    "java": 17,
+    "androidx_webkit": "1.18.0"
+  },
+  "ci_scope": "scaffold-validation-and-diagnostics-apk"
 }
