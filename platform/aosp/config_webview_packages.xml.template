@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<webviewproviders>
+    <!-- Replace with the Base64 certificate from the exact release APK. -->
+    <webviewprovider
+        packageName="io.github.astromg01.a06webcore"
+        description="A06 WebCore"
+        availableByDefault="true">
+        <signature>REPLACE_WITH_BASE64_RELEASE_CERTIFICATE</signature>
+    </webviewprovider>
+    <webviewprovider
+        packageName="com.android.webview"
+        description="AOSP WebView fallback"
+        availableByDefault="false">
+    </webviewprovider>
+</webviewproviders>

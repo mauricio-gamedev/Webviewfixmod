@@ -1,0 +1,24 @@
+{
+  "name": "A06 WebCore",
+  "repository_slug": "Webviewfixmod",
+  "project_type": "android-webview-provider",
+  "not_a_browser": true,
+  "upstream": "https://chromium.googlesource.com/chromium/src.git",
+  "chromium_revision": "UNPINNED_PENDING_FIRST_CLEAN_BUILD",
+  "android_target": 36,
+  "target_os": "android",
+  "target_cpu": "arm64",
+  "device": {
+    "manufacturer": "Samsung",
+    "model": "SM-A065M",
+    "commercial_name": "Galaxy A06",
+    "android_version": 16,
+    "abi": "arm64-v8a",
+    "root_required": false,
+    "stock_firmware_provider_replacement_supported": false
+  },
+  "provider_test_package": "com.android.webview",
+  "production_provider_package": "io.github.astromg01.a06webcore",
+  "provider_test_environment": "AOSP userdebug/eng emulator or compatible test image",
+  "ci_scope": "scaffold-validation-only"
+}

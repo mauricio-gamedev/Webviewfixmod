@@ -1,0 +1,15 @@
+out/
+chromium/src/
+*.ninja
+*.ninja_deps
+*.ninja_log
+device-baseline/
+artifacts/
+*.apk
+*.aab
+*.jks
+*.keystore
+*.p12
+*.pem
+*.key
+local.properties
