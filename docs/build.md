@@ -2,7 +2,7 @@
 
 ## Host requirements
 
-Use a capable Linux x86_64 machine prepared according to Chromium's Android build instructions. Chromium source plus dependencies and build output require substantial storage, RAM and CPU. The Galaxy A06 is a test target, not a practical Chromium compilation host.
+Use a Linux x86_64 machine. Chromium's official Android build guide specifies at least 8 GB RAM and 100 GB free disk; more than 16 GB RAM is highly recommended. The Galaxy A06 is a test target, not a practical Chromium compilation host. `tools/check_build_host.sh` checks architecture, RAM and free disk before source synchronization or compilation.
 
 Official references:
 - https://chromium.googlesource.com/chromium/src/+/refs/tags/158.0.8127.36/android_webview/docs/build-instructions.md
@@ -14,7 +14,7 @@ Official references:
 The exact baseline is documented in `chromium/UPSTREAM.md` and `project.json`.
 
 ```bash
-tools/sync_chromium.sh
+bash tools/sync_chromium.sh
 ```
 
 The sync script uses the pinned Chromium commit and synchronizes DEPS/hooks. Do not switch to `main` or `lkgr` for a reproducible baseline.
@@ -41,7 +41,7 @@ Start with the default `system_webview_apk` target. The separate `system_webview
 ### Local test
 
 ```bash
-BUILD_FLAVOR=local-test tools/build_webview.sh
+BUILD_FLAVOR=local-test bash tools/build_webview.sh
 ```
 
 Uses package `com.android.webview` and development signing. This flavor is for a compatible AOSP userdebug/eng image or emulator. Android's documented GMS production provider allowlist does not permit this package as a normal retail provider.
@@ -72,3 +72,7 @@ A completed build must preserve:
 - build flavor and package name.
 
 Scaffold CI is not a Chromium build. No runtime provider selection is claimed until tested on a compatible Android image.
+
+## GitHub Actions capacity
+
+The standard GitHub-hosted runner for public repositories provides 14 GB of SSD storage, below Chromium's 100 GB minimum. A larger Linux runner with 8 vCPU, 32 GB RAM and 300 GB SSD can meet the documented baseline, but managed larger runners require an eligible GitHub Team or Enterprise Cloud plan and billing configuration. Therefore this repository's standard CI deliberately validates metadata, tests and shell syntax only; it does not attempt a doomed full Chromium checkout/build.
