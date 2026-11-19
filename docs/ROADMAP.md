@@ -16,8 +16,8 @@
 ## M2 — Device-side baseline and provider validation
 - [x] Implement offline A06 WebView Diagnostics app.
 - [x] Add provider, device, RAM/PSS, Web API, graphics and media capability reporting.
-- [x] Add Android build and artifact workflow.
-- [ ] Pass Android APK build and lint in GitHub Actions.
+- [x] Add Android build, lint and artifact workflow.
+- [x] Build and publish the diagnostics debug APK (GitHub Actions run 44591340334).
 - [ ] Install diagnostics APK on Galaxy A06 and capture stock provider baseline.
 - [ ] Repeat baseline three times and store JSON reports.
 - [ ] Validate provider selection and host-app compatibility on AOSP userdebug/eng.
