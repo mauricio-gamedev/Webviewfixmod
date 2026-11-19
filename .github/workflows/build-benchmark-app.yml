@@ -1,36 +1,16 @@
-name: Build diagnostics APK
+name: Diagnostics APK
 
 on:
   push:
-    branches: ["main", "feature/**"]
-    paths:
-      - "app/**"
-      - "build.gradle.kts"
-      - "settings.gradle.kts"
-      - "gradle.properties"
-      - ".github/workflows/build-benchmark-app.yml"
+    branches:
+      - main
+      - "feature/**"
   pull_request:
-    paths:
-      - "app/**"
-      - "build.gradle.kts"
-      - "settings.gradle.kts"
-      - "gradle.properties"
-      - ".github/workflows/build-benchmark-app.yml"
   workflow_dispatch:
-
-permissions:
-  contents: read
-
-concurrency:
-  group: diagnostics-apk-${{ github.ref }}
-  cancel-in-progress: true
 
 jobs:
   build:
-    runs-on: ubuntu-24.04
-    env:
-      ANDROID_HOME: /usr/local/lib/android/sdk
-      ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -41,10 +21,13 @@ jobs:
           distribution: temurin
           java-version: "17"
 
-      - name: Verify preinstalled Android SDK
-        run: test -x "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"
+      - name: Verify Android SDK
+        run: |
+          test -n "$ANDROID_HOME"
+          test -x "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"
+          echo "Android SDK: $ANDROID_HOME"
 
-      - name: Accept Android SDK licenses
+      - name: Accept SDK licenses
         run: yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses
 
       - name: Install Android 16 SDK
