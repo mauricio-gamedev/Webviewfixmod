@@ -2,7 +2,7 @@ name: Validate scaffold
 
 on:
   push:
-    branches: ["main", "feature/**"]
+    branches: ["main", "feature/**", "docs/**"]
   pull_request:
 
 jobs:
@@ -13,9 +13,9 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Validate project scaffold
+      - name: Validate project metadata and pinned source
         run: python3 tools/validate_project.py
       - name: Run unit tests
         run: python3 -m unittest discover -s tests -v
       - name: Check shell syntax
-        run: bash -n tools/collect_device_baseline.sh tools/build_webview.sh
+        run: bash -n tools/collect_device_baseline.sh tools/sync_chromium.sh tools/build_webview.sh
