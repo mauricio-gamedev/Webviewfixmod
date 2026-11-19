@@ -25,13 +25,15 @@ class BuildContractTests(unittest.TestCase):
         self.assertIn("chromium_channels", script)
         self.assertIn('--revision="src@$EXPECTED_REVISION"', script)
 
-    def test_gn_flavors_are_distinct(self):
+    def test_gn_flavors_are_distinct_and_low_end_tuned(self):
         local = (ROOT / "chromium/args/a06-arm64.gn").read_text(encoding="utf-8")
         custom = (ROOT / "chromium/args/a06-arm64-aosp-custom.gn").read_text(encoding="utf-8")
         self.assertIn('system_webview_package_name = "com.android.webview"', local)
         self.assertIn('system_webview_package_name = "io.github.astromg01.a06webcore"', custom)
         self.assertIn("is_official_build = true", custom)
         self.assertIn("disable_fieldtrial_testing_config = true", custom)
+        self.assertIn("is_high_end_android = false", local)
+        self.assertIn("is_high_end_android = false", custom)
         self.assertNotIn('android_channel = "stable"', custom)
 
 if __name__ == "__main__":

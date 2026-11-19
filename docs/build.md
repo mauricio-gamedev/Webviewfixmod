@@ -30,7 +30,7 @@ CHROMIUM_CHANNEL=canary bash tools/sync_chromium.sh
 
 The build script accepts the same `CHROMIUM_CHANNEL` value and refuses to build if the checkout SHA does not match that channel's pin.
 
-## GN target and architecture
+## GN target, architecture and low-end profile
 
 The initial target is:
 
@@ -42,6 +42,9 @@ The GN configuration uses:
 - `target_os = "android"`
 - `target_cpu = "arm64"`
 - `is_component_build = false`
+- `is_high_end_android = false`
+
+Chromium M160 defaults `is_high_end_android` to true on ARM64 and documents that this profile favors speed at the expense of binary size and memory. The A06 is a low-end device, so both build flavors explicitly disable that profile. In Chromium's compiler configuration this enables `optimize_for_size` on Android. This is a deliberate size/memory trade-off, not a claim of proven lower latency; benchmark results must confirm whether it improves the A06 workload.
 
 The selected channel is passed to GN as `android_channel`. Do not force `android_sdk_release`; keep the default SDK selected by the pinned Chromium revision. Confirm the A06's supported ABI list before making claims about 32-bit app compatibility.
 

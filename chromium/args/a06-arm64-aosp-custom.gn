@@ -9,4 +9,6 @@ is_official_build = true
 disable_fieldtrial_testing_config = true
 is_chrome_branded = false
 use_official_google_api_keys = false
+# The A06 is a low-end ARM64 device; avoid Chromium's high-end speed-for-memory profile.
+is_high_end_android = false
 system_webview_package_name = "io.github.astromg01.a06webcore"
