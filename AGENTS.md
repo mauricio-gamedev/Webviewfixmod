@@ -29,3 +29,10 @@ A06 WebCore is a Chromium-based Android WebView provider, **not a browser**. Do 
 
 ## Reporting
 Distinguish scaffold validation, Chromium compilation, APK installation, provider selection and physical-device validation. Never report a later stage as complete when only an earlier stage passed.
+
+
+## Device benchmark harness
+- The diagnostics APK measures the currently selected provider; it does not replace it.
+- Preserve offline-only behavior: no INTERNET permission, remote resources, unsafe JS bridge or external navigation.
+- Do not interpret canPlayType as proof of playback or WebGL presence as proof of GPU stability.
+- Capture at least three comparable runs before drawing performance conclusions.
