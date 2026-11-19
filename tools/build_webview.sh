@@ -37,13 +37,12 @@ gn_string() {
 
 case "$BUILD_FLAVOR" in
   local-test)
+    TEMPLATE="$ROOT/chromium/args/a06-arm64.gn"
     PACKAGE_NAME="com.android.webview"
-    OFFICIAL_BUILD=false
-    EXTRA_ARGS=""
     ;;
   aosp-custom)
+    TEMPLATE="$ROOT/chromium/args/a06-arm64-aosp-custom.gn"
     PACKAGE_NAME="io.github.astromg01.a06webcore"
-    OFFICIAL_BUILD=true
     : "${A06_WEBVIEW_KEYSTORE_PATH:?Set A06_WEBVIEW_KEYSTORE_PATH to a project-owned release keystore}"
     : "${A06_WEBVIEW_KEY_ALIAS:?Set A06_WEBVIEW_KEY_ALIAS}"
     : "${A06_WEBVIEW_KEY_PASSWORD:?Set A06_WEBVIEW_KEY_PASSWORD}"
@@ -52,11 +51,6 @@ case "$BUILD_FLAVOR" in
       exit 2
     }
     install -m 600 "$A06_WEBVIEW_KEYSTORE_PATH" "$CHROMIUM_SRC/a06-webcore-release.keystore"
-    EXTRA_ARGS="disable_fieldtrial_testing_config = true
-android_channel = \"stable\"
-default_android_keystore_path = \"//a06-webcore-release.keystore\"
-default_android_keystore_name = $(gn_string "$A06_WEBVIEW_KEY_ALIAS")
-default_android_keystore_password = $(gn_string "$A06_WEBVIEW_KEY_PASSWORD")"
     ;;
   *)
     echo "ERROR: BUILD_FLAVOR must be local-test or aosp-custom" >&2
@@ -64,19 +58,23 @@ default_android_keystore_password = $(gn_string "$A06_WEBVIEW_KEY_PASSWORD")"
     ;;
 esac
 
+[[ -f "$TEMPLATE" ]] || {
+  echo "ERROR: GN template not found: $TEMPLATE" >&2
+  exit 2
+}
+
 mkdir -p "$OUT_DIR"
 ARGS_FILE="$OUT_DIR/args.gn"
-cat > "$ARGS_FILE" <<GN
-target_os = "android"
-target_cpu = "arm64"
-is_debug = false
-is_component_build = false
-is_official_build = $OFFICIAL_BUILD
-is_chrome_branded = false
-use_official_google_api_keys = false
-system_webview_package_name = "$PACKAGE_NAME"
-$EXTRA_ARGS
-GN
+install -m 600 "$TEMPLATE" "$ARGS_FILE"
+
+if [[ "$BUILD_FLAVOR" == "aosp-custom" ]]; then
+  {
+    printf '\n# Injected from environment; never commit this generated file.\n'
+    printf 'default_android_keystore_path = "//a06-webcore-release.keystore"\n'
+    printf 'default_android_keystore_name = %s\n' "$(gn_string "$A06_WEBVIEW_KEY_ALIAS")"
+    printf 'default_android_keystore_password = %s\n' "$(gn_string "$A06_WEBVIEW_KEY_PASSWORD")"
+  } >> "$ARGS_FILE"
+fi
 chmod 600 "$ARGS_FILE"
 
 (
