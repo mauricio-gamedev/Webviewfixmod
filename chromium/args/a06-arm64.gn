@@ -1,0 +1,9 @@
+target_os = "android"
+target_cpu = "arm64"
+is_debug = false
+is_component_build = false
+is_official_build = false
+is_chrome_branded = false
+use_official_google_api_keys = false
+# Development-only package for compatible AOSP userdebug/eng images.
+system_webview_package_name = "com.android.webview"
