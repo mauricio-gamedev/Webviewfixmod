@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline' 'wasm-unsafe-eval'; style-src 'unsafe-inline'; img-src data:; media-src 'none'; connect-src 'none';">
+<title>A06 WebCore Bench</title>
+<style>
+:root{color-scheme:dark;font-family:system-ui,sans-serif;background:#101820;color:#e8f0f2}
+body{margin:0;padding:16px}
+main{max-width:720px;margin:auto}
+.card{padding:14px;border:1px solid #34434b;border-radius:12px;background:#17232c}
+h1{font-size:18px;margin:0 0 8px}
+p{font-size:13px;line-height:1.5;color:#b9c6cb}
+#state{font-size:12px;color:#80cbc4}
+pre{white-space:pre-wrap;overflow-wrap:anywhere;font-size:11px}
+</style>
+</head>
+<body>
+<main>
+  <section class="card">
+    <h1>A06 WebCore · Engine Diagnostics</h1>
+    <p>Local, offline capability and microbenchmark page. This is a test surface, not a browser.</p>
+    <div id="state">Waiting for the Android test runner.</div>
+    <pre id="result"></pre>
+  </section>
+</main>
+<script>
+(function () {
+  "use strict";
+
+  function timed(fn) {
+    const start = performance.now();
+    const value = fn();
+    return { duration_ms: Number((performance.now() - start).toFixed(3)), value: value };
+  }
+
+  function run() {
+    const output = {
+      secure_context: Boolean(window.isSecureContext),
+      user_agent: navigator.userAgent,
+      viewport: { width: innerWidth, height: innerHeight, dpr: devicePixelRatio || 1 },
+      features: {},
+      benchmarks: {},
+      media: {}
+    };
+
+    const jsTest = timed(function () {
+      let checksum = 0;
+      for (let i = 0; i < 400000; i++) {
+        checksum = (checksum + ((i * 13) ^ (i >>> 2))) | 0;
+      }
+      return checksum;
+    });
+    output.benchmarks.javascript_400k_ms = jsTest.duration_ms;
+    output.benchmarks.javascript_checksum = jsTest.value;
+    output.benchmarks.javascript_iterations_per_second =
+      Math.round(400000 / Math.max(jsTest.duration_ms / 1000, 0.000001));
+
+    const domTest = timed(function () {
+      const fragment = document.createDocumentFragment();
+      for (let i = 0; i < 500; i++) {
+        const node = document.createElement("span");
+        node.textContent = "webcore-" + i;
+        fragment.appendChild(node);
+      }
+      const target = document.createElement("div");
+      target.appendChild(fragment);
+      return target.childElementCount;
+    });
+    output.benchmarks.dom_create_500_ms = domTest.duration_ms;
+    output.benchmarks.dom_nodes_created = domTest.value;
+
+    const canvasTest = timed(function () {
+      const canvas = document.createElement("canvas");
+      canvas.width = 512;
+      canvas.height = 256;
+      const context = canvas.getContext("2d", { alpha: false });
+      if (!context) return false;
+      for (let i = 0; i < 1500; i++) {
+        context.fillStyle = "rgb(" + (i % 255) + ",80,140)";
+        context.fillRect((i * 17) % 512, (i * 29) % 256, 9, 7);
+      }
+      const pixel = context.getImageData(10, 10, 1, 1).data;
+      return { supported: true, sample_rgba: Array.from(pixel) };
+    });
+    output.features.canvas_2d = Boolean(canvasTest.value);
+    output.benchmarks.canvas_1500_rects_ms = canvasTest.duration_ms;
+    output.benchmarks.canvas_sample = canvasTest.value;
+
+    const glCanvas = document.createElement("canvas");
+    const gl2 = glCanvas.getContext("webgl2");
+    const gl1 = gl2 ? null : glCanvas.getContext("webgl");
+    const gl = gl2 || gl1;
+    output.features.webgl2 = Boolean(gl2);
+    output.features.webgl = Boolean(gl);
+    output.features.webgl_max_texture_size = gl ?
+      gl.getParameter(gl.MAX_TEXTURE_SIZE) : null;
+
+    output.features.webassembly = typeof WebAssembly === "object";
+    output.features.webassembly_module = false;
+    output.benchmarks.webassembly_result = null;
+    if (output.features.webassembly) {
+      try {
+        const bytes = new Uint8Array([
+          0,97,115,109,1,0,0,0,
+          1,5,1,96,0,1,127,
+          3,2,1,0,
+          7,5,1,1,102,0,0,
+          10,6,1,4,0,65,42,11
+        ]);
+        const module = new WebAssembly.Module(bytes);
+        const instance = new WebAssembly.Instance(module);
+        output.benchmarks.webassembly_result = instance.exports.f();
+        output.features.webassembly_module = output.benchmarks.webassembly_result === 42;
+      } catch (error) {
+        output.benchmarks.webassembly_error = String(error);
+      }
+    }
+
+    output.features.css_grid = Boolean(window.CSS && CSS.supports("display", "grid"));
+    output.features.css_filter = Boolean(window.CSS && CSS.supports("filter", "blur(1px)"));
+    output.features.resize_observer = typeof ResizeObserver === "function";
+    output.features.intersection_observer = typeof IntersectionObserver === "function";
+    output.features.offscreen_canvas = typeof OffscreenCanvas === "function";
+    output.features.webgpu_api = Boolean(navigator.gpu);
+    output.features.webrtc_api = typeof RTCPeerConnection === "function";
+    output.features.websocket_api = typeof WebSocket === "function";
+    output.features.indexeddb = Boolean(window.indexedDB);
+    output.features.cache_api = Boolean(window.caches);
+    output.features.service_worker_api = Boolean(navigator.serviceWorker);
+    output.features.local_storage = false;
+    try {
+      const key = "__a06_webcore_probe__";
+      localStorage.setItem(key, "1");
+      output.features.local_storage = localStorage.getItem(key) === "1";
+      localStorage.removeItem(key);
+    } catch (_) {}
+
+    const video = document.createElement("video");
+    output.media.h264_mp4 = video.canPlayType('video/mp4; codecs="avc1.42E01E"');
+    output.media.vp9_webm = video.canPlayType('video/webm; codecs="vp9"');
+    output.media.av1_mp4 = video.canPlayType('video/mp4; codecs="av01.0.04M.08"');
+    const audio = document.createElement("audio");
+    output.media.opus_webm = audio.canPlayType('audio/webm; codecs="opus"');
+    output.features.performance_memory_api = Boolean(performance.memory);
+    if (performance.memory) {
+      output.benchmarks.js_heap_used_bytes = performance.memory.usedJSHeapSize;
+      output.benchmarks.js_heap_limit_bytes = performance.memory.jsHeapSizeLimit;
+    }
+
+    output.completed_at = new Date().toISOString();
+    document.getElementById("state").textContent = "Diagnostics complete.";
+    document.getElementById("result").textContent = JSON.stringify(output, null, 2);
+    return output;
+  }
+
+  window.__a06WebCoreBench = { run: run };
+})();
+</script>
+</body>
+</html>

@@ -13,3 +13,5 @@ artifacts/
 *.pem
 *.key
 local.properties
+.gradle/
+**/build/

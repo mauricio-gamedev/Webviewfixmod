@@ -34,6 +34,12 @@ BUILD_FLAVOR=local-test bash tools/build_webview.sh
 
 O script verifica os recursos antes de baixar ou compilar. O Galaxy A06 é alvo de teste, não host de compilação. O runner padrão do GitHub Actions tem apenas 14 GB de SSD para repositórios públicos e não comporta o build completo.
 
+## Diagnóstico no Galaxy A06
+
+O projeto inclui um app técnico separado, **A06 WebCore Diagnostics**. Ele não é navegador e não altera o provedor do sistema. O app mede o WebView que o Android já selecionou, executa testes locais/offline de JavaScript, DOM, Canvas, WebGL, WebAssembly e APIs, registra memória e permite copiar/compartilhar um relatório JSON.
+
+A compilação é feita pelo workflow [Build diagnostics APK](https://github.com/mauricio-gamedev/Webviewfixmod/actions/workflows/build-benchmark-app.yml). O APK debug é publicado como artefato da execução bem-sucedida. Procedimento e interpretação: [docs/benchmark-app.md](docs/benchmark-app.md).
+
 ## Princípios
 
 - Manter Chromium upstream atualizado e registrar a revisão exata de cada build.
